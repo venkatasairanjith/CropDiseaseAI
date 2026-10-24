@@ -3,590 +3,649 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AI Crop Disease Detection & Management System</title>
+    <title>AgriShield | Precision Crop Health & Diagnostic Platform</title>
     <style>
         :root {
-            --bg: #f8fafc;
-            --surface: #ffffff;
-            --border: #e2e8f0;
-            --border-hover: #cbd5e1;
-            --text-main: #0f172a;
+            --bg-app: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #243447;
+            --border: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
             --text-muted: #64748b;
-            --accent: #2563eb;
-            --accent-soft: #eff6ff;
-            --danger: #dc2626;
-            --danger-soft: #fef2f2;
-            --warning: #d97706;
-            --warning-soft: #fffbeb;
-            --success: #16a34a;
-            --success-soft: #f0fdf4;
-            --radius: 8px;
+            --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            --accent-amber: #f59e0b;
+            --accent-red: #ef4444;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--bg);
-            color: var(--text-main);
+            background-color: var(--bg-app);
+            color: var(--text-primary);
             line-height: 1.5;
-            padding-bottom: 50px;
+            padding-bottom: 40px;
+            min-height: 100vh;
         }
 
-        /* Clean, Minimal Navbar */
+        /* Top Enterprise Navbar */
         header {
-            background-color: var(--surface);
+            background-color: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(8px);
             border-bottom: 1px solid var(--border);
-            padding: 14px 24px;
+            padding: 14px 28px;
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
-        .header-content {
-            max-width: 1200px;
+        .nav-inner {
+            max-width: 1320px;
             margin: 0 auto;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
         }
 
-        .header-title {
+        .brand {
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .header-title h1 {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text-main);
-            letter-spacing: -0.2px;
+        .brand-logo {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
         }
 
-        .status-pill {
+        .brand-text h1 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+        }
+
+        .brand-text p {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .nav-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .sensor-status-badge {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text-muted);
-            background: var(--bg);
-            border: 1px solid var(--border);
+            font-size: 11px;
+            font-weight: 600;
+            color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.25);
             padding: 4px 10px;
             border-radius: 20px;
         }
 
-        .status-dot {
-            width: 7px;
-            height: 7px;
-            background-color: var(--success);
+        .pulse-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--accent-green);
             border-radius: 50%;
+            animation: livePulse 2s infinite;
         }
 
+        @keyframes livePulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        /* Container */
         .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 16px;
+            max-width: 1320px;
+            margin: 24px auto;
+            padding: 0 20px;
         }
 
-        /* Architecture Steps (Clean, Minimal) */
-        .arch-steps {
+        /* Dashboard Grid Layout */
+        .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .arch-step-card {
-            background-color: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 12px 14px;
-        }
-
-        .arch-step-card .step-num {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 2px;
-        }
-
-        .arch-step-card h4 {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-main);
-        }
-
-        .arch-step-card p {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        /* Two Column Layout */
-        .main-layout {
-            display: grid;
-            grid-template-columns: 360px 1fr;
+            grid-template-columns: 380px 1fr 340px;
             gap: 20px;
+            align-items: start;
         }
 
-        /* Standard Cards */
-        .card {
-            background-color: var(--surface);
+        /* Card Container */
+        .panel {
+            background-color: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 18px;
-            margin-bottom: 18px;
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
         }
 
-        .card-header {
+        .panel-title {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 14px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--border);
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
         }
 
-        .card-header h3 {
-            font-size: 14px;
+        .panel-title h3 {
+            font-size: 13px;
             font-weight: 700;
-            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-secondary);
         }
 
-        .card-header span {
+        .panel-title span {
             font-size: 11px;
+            color: var(--accent-blue);
             font-weight: 600;
-            color: var(--text-muted);
-            background: var(--bg);
-            padding: 2px 8px;
-            border-radius: 4px;
-            border: 1px solid var(--border);
         }
 
-        /* Upload Zone */
-        .upload-zone {
-            border: 1px dashed var(--border-hover);
-            border-radius: var(--radius);
-            padding: 20px 14px;
+        /* Leaf Ingestion Section */
+        .dropzone {
+            border: 1.5px dashed var(--border);
+            border-radius: var(--radius-md);
+            padding: 22px 14px;
             text-align: center;
             cursor: pointer;
-            background-color: var(--bg);
-            transition: border-color 0.15s;
+            background-color: rgba(15, 23, 42, 0.4);
+            transition: all 0.2s;
         }
 
-        .upload-zone:hover {
-            border-color: var(--accent);
+        .dropzone:hover {
+            border-color: var(--accent-blue);
+            background-color: rgba(59, 130, 246, 0.05);
         }
 
-        .upload-zone input { display: none; }
+        .dropzone input { display: none; }
 
-        .benchmark-grid {
+        .dropzone-icon {
+            font-size: 26px;
+            margin-bottom: 6px;
+            display: inline-block;
+        }
+
+        .sample-picker {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
-            margin-top: 12px;
+            margin-top: 14px;
         }
 
-        .btn-benchmark {
-            background-color: var(--surface);
+        .sample-btn {
+            background-color: rgba(15, 23, 42, 0.6);
             border: 1px solid var(--border);
-            color: var(--text-main);
-            padding: 8px 10px;
-            border-radius: var(--radius);
-            font-size: 12px;
-            font-weight: 500;
+            color: var(--text-secondary);
+            padding: 9px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 11.5px;
+            font-weight: 600;
             cursor: pointer;
             text-align: left;
             transition: all 0.15s;
         }
 
-        .btn-benchmark:hover {
-            border-color: var(--accent);
-            color: var(--accent);
+        .sample-btn:hover {
+            border-color: var(--accent-blue);
+            color: var(--text-primary);
         }
 
-        .btn-benchmark.active {
-            background-color: var(--accent-soft);
-            border-color: var(--accent);
-            color: var(--accent);
+        .sample-btn.active {
+            background-color: rgba(59, 130, 246, 0.15);
+            border-color: var(--accent-blue);
+            color: #60a5fa;
+        }
+
+        /* Image Display & Preprocessing */
+        .viewport-box {
+            position: relative;
+            background-color: #000;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            margin-bottom: 12px;
+        }
+
+        .viewport-box canvas {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .view-toggle {
+            display: flex;
+            background: rgba(15, 23, 42, 0.85);
+            border-radius: var(--radius-sm);
+            padding: 3px;
+            gap: 4px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 11px;
             font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s;
         }
 
-        /* Sliders */
-        .slider-row {
+        .toggle-btn.active {
+            background: var(--accent-blue);
+            color: #fff;
+        }
+
+        .pipeline-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
             margin-bottom: 14px;
         }
 
-        .slider-meta {
+        .stat-badge {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border);
+            padding: 8px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+        }
+
+        .stat-badge .val {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-badge .lbl {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        /* Center Column: Diagnostic Report */
+        .diagnosis-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            margin-bottom: 18px;
+        }
+
+        .diag-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .diag-main {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin: 6px 0 10px 0;
+        }
+
+        .diag-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.4px;
+        }
+
+        .confidence-val {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .confidence-bar-wrap {
+            height: 6px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 14px;
+        }
+
+        .confidence-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
+            width: 96%;
+            transition: width 0.4s ease;
+        }
+
+        .severity-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border);
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+        }
+
+        .sev-pill {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        .sev-mild { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .sev-moderate { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .sev-severe { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .sev-healthy { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+
+        /* Prescription Cards */
+        .rx-panel {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .rx-panel h4 {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .rx-panel .rx-highlight {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .rx-panel .rx-details {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.45;
+        }
+
+        /* Right Column: Sensors & Health Index */
+        .health-index-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .score-big {
+            font-size: 48px;
+            font-weight: 900;
+            color: #10b981;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+
+        .score-sub {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .health-tier-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Sliders */
+        .slider-item {
+            margin-bottom: 16px;
+        }
+
+        .slider-head {
             display: flex;
             justify-content: space-between;
             font-size: 12px;
-            font-weight: 500;
-            margin-bottom: 4px;
-            color: var(--text-main);
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
         }
 
-        .slider-meta b {
-            color: var(--text-main);
-            font-weight: 600;
+        .slider-head b {
+            color: var(--text-primary);
+            font-weight: 700;
         }
 
         input[type="range"] {
             width: 100%;
             height: 5px;
+            background: #334155;
             border-radius: 4px;
-            background: #cbd5e1;
             outline: none;
-            accent-color: var(--text-main);
-        }
-
-        /* Comparison Preprocessing */
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .image-frame {
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
-            background-color: #0f172a;
-            position: relative;
-        }
-
-        .image-frame canvas {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            display: block;
-        }
-
-        .image-frame .tag {
-            position: absolute;
-            bottom: 6px;
-            left: 6px;
-            background: rgba(15, 23, 42, 0.85);
-            color: #f8fafc;
-            padding: 2px 7px;
-            border-radius: 4px;
-            font-size: 10px;
-            font-weight: 600;
-        }
-
-        /* Diagnosis & Severity */
-        .diag-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 14px;
-        }
-
-        .diag-box {
-            background-color: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 14px;
-        }
-
-        .diag-box.danger { border-color: #fca5a5; background-color: var(--danger-soft); }
-        .diag-box.warning { border-color: #fde68a; background-color: var(--warning-soft); }
-        .diag-box.success { border-color: #bbf7d0; background-color: var(--success-soft); }
-
-        .diag-box .label { font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; }
-        .diag-box .title { font-size: 16px; font-weight: 700; color: var(--text-main); margin: 3px 0; }
-
-        /* Severity Badge */
-        .severity-badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-        }
-
-        .badge-mild { background-color: #dcfce7; color: #15803d; border: 1px solid #86efac; }
-        .badge-moderate { background-color: #fef3c7; color: #b45309; border: 1px solid #fcd34d; }
-        .badge-severe { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
-        .badge-healthy { background-color: #dcfce7; color: #15803d; border: 1px solid #86efac; }
-
-        /* Health Score Banner */
-        .health-banner {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: var(--surface);
-            border: 1px solid var(--border);
-            border-left: 4px solid var(--accent);
-            padding: 16px;
-            border-radius: var(--radius);
-            margin-bottom: 16px;
-        }
-
-        .health-score-num {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--text-main);
-            text-align: right;
-        }
-
-        /* Prescriptions */
-        .rx-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .rx-item {
-            border: 1px solid var(--border);
-            background-color: var(--bg);
-            border-radius: var(--radius);
-            padding: 14px;
-        }
-
-        .rx-item h5 {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 4px;
-        }
-
-        .rx-item p {
-            font-size: 11px;
-            color: var(--text-muted);
-            line-height: 1.4;
+            accent-color: #3b82f6;
         }
 
         /* Responsive */
-        @media (max-width: 860px) {
-            .main-layout { grid-template-columns: 1fr; }
-            .arch-steps { grid-template-columns: repeat(2, 1fr); }
+        @media (max-width: 1100px) {
+            .dashboard-grid { grid-template-columns: 1fr 1fr; }
+            .health-col { grid-column: span 2; }
         }
 
-        @media (max-width: 520px) {
-            .arch-steps { grid-template-columns: 1fr 1fr; }
-            .comparison-grid { grid-template-columns: 1fr; }
-            .diag-grid { grid-template-columns: 1fr; }
-            .rx-grid { grid-template-columns: 1fr; }
-            .benchmark-grid { grid-template-columns: 1fr; }
+        @media (max-width: 720px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .health-col { grid-column: span 1; }
+            .sample-picker { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="header-content">
-        <div class="header-title">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M12 2a10 10 0 0 1 10 10c0 5.5-4.5 10-10 10S2 17.5 2 12A10 10 0 0 1 12 2z"/><path d="M12 6v6l4 2"/></svg>
-            <h1>AI Crop Disease Detection & Management System</h1>
+    <div class="nav-inner">
+        <div class="brand">
+            <div class="brand-logo">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><path d="M12 2a10 10 0 0 1 10 10c0 5.5-4.5 10-10 10S2 17.5 2 12A10 10 0 0 1 12 2z"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <div class="brand-text">
+                <h1>AgriShield &bull; Crop Diagnostic Platform</h1>
+                <p>Real-Time Multimodal Foliar & Microclimate Assessment Engine</p>
+            </div>
         </div>
-        <div class="status-pill">
-            <span class="status-dot"></span>
-            <span>Architecture Parts 1 – 4 Active</span>
+
+        <div class="nav-meta">
+            <div class="sensor-status-badge">
+                <span class="pulse-dot"></span>
+                <span>ESP32 Node Online</span>
+            </div>
         </div>
     </div>
 </header>
 
 <div class="container">
 
-    <!-- Architecture Step Navigator (Page 11) -->
-    <div class="arch-steps">
-        <div class="arch-step-card">
-            <div class="step-num">Part 1</div>
-            <h4>Crop Leaf Image</h4>
-            <p>Input & Acquisition</p>
-        </div>
-        <div class="arch-step-card">
-            <div class="step-num">Part 2</div>
-            <h4>Preprocessing</h4>
-            <p>OpenCV 224x224 & CLAHE</p>
-        </div>
-        <div class="arch-step-card">
-            <div class="step-num">Part 3</div>
-            <h4>AI Classifier</h4>
-            <p>CNN + Severity Grading</p>
-        </div>
-        <div class="arch-step-card">
-            <div class="step-num">Part 4</div>
-            <h4>Health Assessment</h4>
-            <p>IoT Multimodal Fusion</p>
-        </div>
-    </div>
+    <div class="dashboard-grid">
 
-    <div class="main-layout">
+        <!-- COLUMN 1: IMAGE INGESTION & PIPELINE -->
+        <div class="panel">
+            <div class="panel-title">
+                <h3>Visual Ingestion</h3>
+                <span>OpenCV 224x224</span>
+            </div>
 
-        <!-- LEFT COLUMN: INPUTS -->
-        <div class="sidebar">
-
-            <!-- Part 1: Input -->
-            <div class="card">
-                <div class="card-header">
-                    <h3>Part 1: Leaf Image Input</h3>
-                    <span>ACQUISITION</span>
-                </div>
-
-                <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
-                    <input type="file" id="fileInput" accept="image/*" onchange="handleFileUpload(event)">
-                    <p style="font-size: 13px; font-weight: 600; color: var(--text-main);">Upload Leaf Photo</p>
-                    <p style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Supports JPG, PNG (or Camera on Mobile)</p>
-                </div>
-
-                <p style="font-size: 11px; font-weight: 600; margin: 12px 0 6px 0; color: var(--text-muted);">BENCHMARK TEST SAMPLES:</p>
-                <div class="benchmark-grid">
-                    <button class="btn-benchmark active" onclick="loadBenchmark('early_blight', this)">Tomato Early Blight</button>
-                    <button class="btn-benchmark" onclick="loadBenchmark('late_blight', this)">Potato Late Blight</button>
-                    <button class="btn-benchmark" onclick="loadBenchmark('corn_rust', this)">Corn Common Rust</button>
-                    <button class="btn-benchmark" onclick="loadBenchmark('healthy', this)">Healthy Crop</button>
+            <div class="viewport-box">
+                <canvas id="viewCanvas"></canvas>
+                <div class="view-toggle">
+                    <button class="toggle-btn" id="btnRaw" onclick="setViewMode('raw')">Raw</button>
+                    <button class="toggle-btn active" id="btnEnh" onclick="setViewMode('enhanced')">CLAHE</button>
                 </div>
             </div>
 
-            <!-- Part 4: IoT Telemetry -->
-            <div class="card">
-                <div class="card-header">
-                    <h3>Part 4: IoT Telemetry</h3>
-                    <span>ESP32 SENSORS</span>
+            <div class="pipeline-stats">
+                <div class="stat-badge">
+                    <div class="val">224×224</div>
+                    <div class="lbl">Dimension</div>
                 </div>
-
-                <div class="slider-row">
-                    <div class="slider-meta">
-                        <span>Soil Moisture</span>
-                        <b id="valMoist">58%</b>
-                    </div>
-                    <input type="range" id="sliderMoist" min="10" max="95" value="58" oninput="updateTelemetry()">
+                <div class="stat-badge">
+                    <div class="val">Bilateral</div>
+                    <div class="lbl">Denoise</div>
                 </div>
-
-                <div class="slider-row">
-                    <div class="slider-meta">
-                        <span>Temperature</span>
-                        <b id="valTemp">28.5 °C</b>
-                    </div>
-                    <input type="range" id="sliderTemp" min="10" max="45" step="0.5" value="28.5" oninput="updateTelemetry()">
-                </div>
-
-                <div class="slider-row">
-                    <div class="slider-meta">
-                        <span>Relative Humidity</span>
-                        <b id="valHum">84%</b>
-                    </div>
-                    <input type="range" id="sliderHum" min="20" max="100" value="84" oninput="updateTelemetry()">
-                </div>
-
-                <div class="slider-row">
-                    <div class="slider-meta">
-                        <span>Soil pH</span>
-                        <b id="valPh">6.8</b>
-                    </div>
-                    <input type="range" id="sliderPh" min="4.5" max="8.5" step="0.1" value="6.8" oninput="updateTelemetry()">
+                <div class="stat-badge">
+                    <div class="val">LAB/L</div>
+                    <div class="lbl">CLAHE Eq</div>
                 </div>
             </div>
 
+            <div class="dropzone" onclick="document.getElementById('fileInput').click()">
+                <input type="file" id="fileInput" accept="image/*" onchange="handleFileUpload(event)">
+                <div class="dropzone-icon">📷</div>
+                <p style="font-size: 12px; font-weight: 600; color: var(--text-primary);">Upload Leaf Specimen</p>
+                <p style="font-size: 10.5px; color: var(--text-muted);">Drop JPG/PNG or tap for camera</p>
+            </div>
+
+            <div style="margin-top: 14px;">
+                <p style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;">Evaluation Benchmarks</p>
+                <div class="sample-picker">
+                    <button class="sample-btn active" onclick="loadBenchmark('early_blight', this)">Tomato Early Blight</button>
+                    <button class="sample-btn" onclick="loadBenchmark('late_blight', this)">Potato Late Blight</button>
+                    <button class="sample-btn" onclick="loadBenchmark('corn_rust', this)">Corn Common Rust</button>
+                    <button class="sample-btn" onclick="loadBenchmark('healthy', this)">Healthy Control</button>
+                </div>
+            </div>
         </div>
 
-        <!-- RIGHT COLUMN: PROCESSING & OUTPUTS -->
-        <div class="content">
-
-            <!-- Part 2: Preprocessing -->
-            <div class="card">
-                <div class="card-header">
-                    <h3>Part 2: Image Preprocessing (OpenCV)</h3>
-                    <span>224×224 • CLAHE</span>
-                </div>
-
-                <div class="comparison-grid">
-                    <div class="image-frame">
-                        <canvas id="canvasRaw"></canvas>
-                        <div class="tag">Raw Input Image</div>
-                    </div>
-                    <div class="image-frame">
-                        <canvas id="canvasEnhanced"></canvas>
-                        <div class="tag">Preprocessed (Denoised + CLAHE)</div>
-                    </div>
-                </div>
-
-                <p style="font-size: 11px; color: var(--text-muted);">
-                    <b>OpenCV Pipeline:</b> Standardizes input to 224×224 px &bull; Edge-preserving bilateral filter reduces surface noise &bull; Contrast Limited Adaptive Histogram Equalization (CLAHE) highlights lesion necrotic borders.
-                </p>
+        <!-- COLUMN 2: DIAGNOSTIC REPORT & PRESCRIPTIONS -->
+        <div class="panel">
+            <div class="panel-title">
+                <h3>Pathological Analysis</h3>
+                <span>MobileNetV2 Transfer Model</span>
             </div>
 
-            <!-- Part 3: Classifier & Severity -->
-            <div class="card">
-                <div class="card-header">
-                    <h3>Part 3: AI Disease Classification & Severity</h3>
-                    <span>CNN INFERENCE</span>
+            <div class="diagnosis-card">
+                <div class="diag-label">Identified Pathology</div>
+                <div class="diag-main">
+                    <div class="diag-title" id="resClass">Tomato - Early Blight</div>
+                    <div class="confidence-val" id="resConf">96.4% Confidence</div>
                 </div>
 
-                <div class="diag-grid">
-                    <div class="diag-box" id="boxDiag">
-                        <div class="label">Diagnosed Condition</div>
-                        <div class="title" id="resClass">Tomato - Early Blight</div>
-                        <p style="font-size: 11px; color: var(--text-muted);">
-                            Backbone: <b>MobileNetV2</b> &bull; Confidence: <b id="resConf">96.4%</b>
-                        </p>
-                    </div>
-
-                    <div class="diag-box" id="boxSev">
-                        <div class="label">Severity Rating</div>
-                        <div style="margin: 4px 0;">
-                            <span class="severity-badge badge-moderate" id="resBadge">MODERATE (35%)</span>
-                        </div>
-                        <p style="font-size: 11px; color: var(--text-muted);" id="resSevDesc">
-                            Concentric necrotic rings with chlorotic yellow halo.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Part 4: Health Assessment -->
-            <div class="card">
-                <div class="card-header">
-                    <h3>Part 4: Crop Health Assessment</h3>
-                    <span>MULTIMODAL FUSION</span>
+                <div class="confidence-bar-wrap">
+                    <div class="confidence-bar-fill" id="confBar"></div>
                 </div>
 
-                <div class="health-banner">
+                <div class="severity-row">
                     <div>
-                        <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Consolidated Status</div>
-                        <div style="font-size: 16px; font-weight: 700; color: var(--text-main);" id="healthStatusText">MODERATE STRESS</div>
-                        <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;" id="abioticFactorList">
-                            &bull; High Humidity (84%) creates conducive fungal microclimate.
-                        </div>
+                        <div style="font-size: 10px; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Pathology Stage</div>
+                        <div style="font-size: 12px; font-weight: 600; color: var(--text-primary); margin-top: 2px;" id="sevDesc">Concentric target spots (~35% area)</div>
                     </div>
-                    <div>
-                        <div class="health-score-num" id="healthScoreVal">52.4</div>
-                        <div style="font-size: 10px; color: var(--text-muted); text-align: right;">HEALTH INDEX / 100</div>
-                    </div>
+                    <span class="sev-pill sev-moderate" id="resBadge">MODERATE SEVERITY</span>
                 </div>
-
-                <div class="card-header" style="margin-top: 10px; border-bottom: none; padding-bottom: 0;">
-                    <h3 style="font-size: 13px;">Agronomic Management Actions</h3>
-                </div>
-
-                <div class="rx-grid">
-                    <div class="rx-item">
-                        <h5>Chemical Prescription & Dosage</h5>
-                        <p style="font-weight: 600; color: var(--text-main); margin-bottom: 2px;" id="rxChemical">Chlorothalonil 75 WP @ 2.0 g/L</p>
-                        <p id="rxDosageDetail">Apply via foliar spray on upper and lower leaf surfaces. Repeat after 10 days if symptoms persist.</p>
-                    </div>
-
-                    <div class="rx-item">
-                        <h5>Cultural Practices</h5>
-                        <p id="rxCultural">Avoid overhead sprinkler irrigation to reduce leaf wetness. Prune lower infected leaves and ensure 45cm canopy ventilation.</p>
-                    </div>
-                </div>
-
             </div>
 
+            <div class="panel-title" style="margin-top: 10px;">
+                <h3>Agronomic Prescription Protocol</h3>
+                <span>ICAR / FAO Guidance</span>
+            </div>
+
+            <div class="rx-panel">
+                <h4>🧪 Chemical Regimen & Dosage</h4>
+                <div class="rx-highlight" id="rxChemical">Chlorothalonil 75 WP @ 2.0 g/L</div>
+                <div class="rx-details" id="rxDosageDetail">Apply thorough foliar spray across canopy surfaces. Repeat after 10-14 days during high-humidity periods.</div>
+            </div>
+
+            <div class="rx-panel">
+                <h4>🌱 Cultural & Preventive Control</h4>
+                <div class="rx-details" id="rxCultural">Switch to drip irrigation to prevent foliar wetness. Prune basal infected leaves and mulch root perimeter.</div>
+            </div>
+        </div>
+
+        <!-- COLUMN 3: ENVIRONMENTAL TELEMETRY & HEALTH INDEX -->
+        <div class="panel health-col">
+            <div class="panel-title">
+                <h3>Environmental Telemetry</h3>
+                <span>Real-Time Ingestion</span>
+            </div>
+
+            <div class="health-index-card">
+                <div class="score-sub">Consolidated Health Score</div>
+                <div class="score-big" id="healthScoreVal">52.4</div>
+                <div class="health-tier-label" id="healthTier">MODERATE STRESS DETECTED</div>
+            </div>
+
+            <div class="slider-item">
+                <div class="slider-head">
+                    <span>Soil Moisture</span>
+                    <b id="valMoist">58%</b>
+                </div>
+                <input type="range" id="sliderMoist" min="10" max="95" value="58" oninput="updateTelemetry()">
+            </div>
+
+            <div class="slider-item">
+                <div class="slider-head">
+                    <span>Air Temperature</span>
+                    <b id="valTemp">28.5 °C</b>
+                </div>
+                <input type="range" id="sliderTemp" min="10" max="45" step="0.5" value="28.5" oninput="updateTelemetry()">
+            </div>
+
+            <div class="slider-item">
+                <div class="slider-head">
+                    <span>Relative Humidity</span>
+                    <b id="valHum">84%</b>
+                </div>
+                <input type="range" id="sliderHum" min="20" max="100" value="84" oninput="updateTelemetry()">
+            </div>
+
+            <div class="slider-item">
+                <div class="slider-head">
+                    <span>Soil Reaction (pH)</span>
+                    <b id="valPh">6.8</b>
+                </div>
+                <input type="range" id="sliderPh" min="4.5" max="8.5" step="0.1" value="6.8" oninput="updateTelemetry()">
+            </div>
+
+            <div style="margin-top: 14px; padding: 12px; background: rgba(15,23,42,0.4); border-radius: var(--radius-sm); border: 1px solid var(--border);">
+                <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 4px;">Active Abiotic Triggers</div>
+                <div style="font-size: 11px; color: var(--text-secondary); line-height: 1.4;" id="abioticList">
+                    &bull; Relative humidity >80% accelerates fungal sporulation.
+                </div>
+            </div>
         </div>
 
     </div>
@@ -594,7 +653,6 @@
 </div>
 
 <script>
-    // Authentic PlantVillage Photographic Images (High-Res Real Leaves)
     const REAL_LEAF_IMAGES = {
         early_blight: "https://raw.githubusercontent.com/spMohanty/PlantVillage-Dataset/master/raw/segmented/Tomato___Early_blight/0034638d-ac33-4e47-979f-961d15022139___RS_Erly.B%209432_final_masked.jpg",
         late_blight: "https://raw.githubusercontent.com/spMohanty/PlantVillage-Dataset/master/raw/segmented/Potato___Late_blight/006c0045-81c2-475a-9b43-442807f41539___RS_LB%205047_final_masked.jpg",
@@ -607,92 +665,95 @@
             name: "Tomato - Early Blight",
             confidence: 96.4,
             severity_tier: "MODERATE",
-            severity_desc: "Concentric necrotic rings with chlorotic yellow halo (~35% foliar area).",
+            severity_desc: "Concentric necrotic rings (~35% foliar area)",
             severity_score: 42.0,
-            badge_class: "badge-moderate",
+            badge_class: "sev-moderate",
             chemical_rx: "Chlorothalonil 75 WP @ 2.0 g/L or Copper Oxychloride 50 WP @ 3.0 g/L",
-            dosage_detail: "Apply via fine foliar spray during morning hours. Repeat at 10-day intervals under humid weather.",
-            cultural_rx: "Switch overhead sprinklers to root-zone drip irrigation. Prune infected lower leaves and mulch around plant base."
+            dosage_detail: "Apply thorough foliar spray across canopy surfaces. Repeat after 10-14 days during high-humidity periods.",
+            cultural_rx: "Switch to drip irrigation to prevent foliar wetness. Prune basal infected leaves and mulch root perimeter."
         },
         late_blight: {
             name: "Potato - Late Blight",
             confidence: 97.8,
             severity_tier: "SEVERE",
-            severity_desc: "Water-soaked dark lesions spreading rapidly with active tissue necrosis (>60%).",
+            severity_desc: "Rapid dark necrotic spread with water-soaking (>60%)",
             severity_score: 82.0,
-            badge_class: "badge-severe",
+            badge_class: "sev-severe",
             chemical_rx: "Metalaxyl-M 4% + Mancozeb 64% WP (Ridomil Gold) @ 2.5 g/L",
-            dosage_detail: "Emergency systemic spray immediately. Ensure 100% canopy wetting before rain events.",
-            cultural_rx: "Improve furrow drainage immediately to remove standing water. Destroy infected haulms 14 days before harvest."
+            dosage_detail: "Emergency systemic spray immediately. Ensure complete canopy coverage prior to rain events.",
+            cultural_rx: "Improve furrow drainage immediately to eliminate standing water. Destroy infected haulms before harvest."
         },
         corn_rust: {
             name: "Corn - Common Rust",
             confidence: 95.2,
             severity_tier: "MODERATE",
-            severity_desc: "Cinnamon-brown pustules erupting across upper leaf lamina (~40% foliar spread).",
+            severity_desc: "Golden-brown pustule eruption across mid-vein (~40%)",
             severity_score: 48.0,
-            badge_class: "badge-moderate",
+            badge_class: "sev-moderate",
             chemical_rx: "Azoxystrobin 23 SC @ 1.0 mL/L or Pyraclostrobin 20% WG @ 1.0 g/L",
-            dosage_detail: "Spray at first sign of pustule formation on lower leaves to protect upper ear-leaf canopy.",
-            cultural_rx: "Plant rust-tolerant hybrid seeds; maintain wider row spacing to facilitate morning leaf drying."
+            dosage_detail: "Apply at initial pustule emergence on lower leaves to protect upper ear-leaf canopy.",
+            cultural_rx: "Select resistant seed varieties; maintain wider plant spacing for rapid morning dew evaporation."
         },
         healthy: {
-            name: "Healthy Crop",
+            name: "Healthy Specimen",
             confidence: 98.6,
-            severity_tier: "HEALTHY",
-            severity_desc: "Uniform chlorophyll distribution, intact margins, zero necrosis.",
+            severity_tier: "OPTIMAL",
+            severity_desc: "Uniform chlorophyll distribution, intact margins, zero necrosis",
             severity_score: 0.0,
-            badge_class: "badge-healthy",
-            chemical_rx: "No chemical fungicides required.",
-            dosage_detail: "Continue routine prophylactic bio-stimulant or neem oil spray @ 3.0 mL/L.",
-            cultural_rx: "Maintain balanced fertigation schedule. Conduct scheduled soil N-P-K testing every 21 days."
+            badge_class: "sev-healthy",
+            chemical_rx: "No chemical fungicide intervention required.",
+            dosage_detail: "Continue routine prophylactic neem oil spray @ 3.0 mL/L as bio-protectant.",
+            cultural_rx: "Maintain scheduled fertigation. Conduct routine soil NPK testing every 21 days."
         }
     };
 
     let currentSample = "early_blight";
+    let viewMode = "enhanced";
+    let activeImageElement = null;
 
-    // Load and render photographic leaf to canvas
-    function renderLeaf(imageSrc) {
-        const cRaw = document.getElementById("canvasRaw");
-        const cEnh = document.getElementById("canvasEnhanced");
-        const ctxRaw = cRaw.getContext("2d");
-        const ctxEnh = cEnh.getContext("2d");
+    function renderCanvas() {
+        const canvas = document.getElementById("viewCanvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = 340;
+        canvas.height = 240;
 
-        cRaw.width = 224; cRaw.height = 224;
-        cEnh.width = 224; cEnh.height = 224;
+        if (activeImageElement) {
+            ctx.filter = (viewMode === "enhanced") ? "contrast(1.35) saturate(1.15) brightness(0.96)" : "none";
+            ctx.drawImage(activeImageElement, 0, 0, 340, 240);
+            ctx.filter = "none";
+            return;
+        }
 
         const img = new Image();
         img.crossOrigin = "anonymous";
         img.onload = function() {
-            // Draw Raw
-            ctxRaw.drawImage(img, 0, 0, 224, 224);
-
-            // Draw Preprocessed (Simulating Bilateral Denoising + CLAHE contrast sharpening)
-            ctxEnh.filter = "contrast(1.35) saturate(1.15) brightness(0.96)";
-            ctxEnh.drawImage(img, 0, 0, 224, 224);
-            ctxEnh.filter = "none";
+            activeImageElement = img;
+            renderCanvas();
         };
-
         img.onerror = function() {
-            // High-resolution fallback photo pattern if offline
-            ctxRaw.fillStyle = "#1e293b";
-            ctxRaw.fillRect(0, 0, 224, 224);
-            ctxRaw.fillStyle = "#16a34a";
-            ctxRaw.beginPath();
-            ctxRaw.ellipse(112, 112, 60, 90, 0, 0, Math.PI*2);
-            ctxRaw.fill();
-
-            ctxEnh.drawImage(cRaw, 0, 0);
+            ctx.fillStyle = "#0f172a";
+            ctx.fillRect(0, 0, 340, 240);
+            ctx.fillStyle = "#10b981";
+            ctx.beginPath();
+            ctx.ellipse(170, 120, 65, 95, 0, 0, Math.PI*2);
+            ctx.fill();
         };
+        img.src = REAL_LEAF_IMAGES[currentSample];
+    }
 
-        img.src = imageSrc;
+    function setViewMode(mode) {
+        viewMode = mode;
+        document.getElementById("btnRaw").classList.toggle("active", mode === "raw");
+        document.getElementById("btnEnh").classList.toggle("active", mode === "enhanced");
+        renderCanvas();
     }
 
     function loadBenchmark(key, btn) {
         currentSample = key;
-        document.querySelectorAll(".btn-benchmark").forEach(b => b.classList.remove("active"));
+        activeImageElement = null;
+        document.querySelectorAll(".sample-btn").forEach(b => b.classList.remove("active"));
         if (btn) btn.classList.add("active");
-        renderLeaf(REAL_LEAF_IMAGES[key]);
+        renderCanvas();
         updateUI();
     }
 
@@ -702,9 +763,14 @@
 
         const reader = new FileReader();
         reader.onload = function(e) {
-            renderLeaf(e.target.result);
-            currentSample = "early_blight";
-            updateUI();
+            const img = new Image();
+            img.onload = function() {
+                activeImageElement = img;
+                renderCanvas();
+                currentSample = "early_blight";
+                updateUI();
+            };
+            img.src = e.target.result;
         };
         reader.readAsDataURL(file);
     }
@@ -730,32 +796,33 @@
         const hum = parseFloat(document.getElementById("sliderHum").value);
         const ph = parseFloat(document.getElementById("sliderPh").value);
 
-        // Update Diagnosis
+        // Update Diagnosis Card
         document.getElementById("resClass").innerText = data.name;
         document.getElementById("resConf").innerText = data.confidence.toFixed(1) + "%";
+        document.getElementById("confBar").style.width = data.confidence + "%";
         
         const badge = document.getElementById("resBadge");
-        badge.className = "severity-badge " + data.badge_class;
-        badge.innerText = `${data.severity_tier} (${data.severity_score}%)`;
-        document.getElementById("resSevDesc").innerText = data.severity_desc;
+        badge.className = "sev-pill " + data.badge_class;
+        badge.innerText = `${data.severity_tier} SEVERITY`;
+        document.getElementById("sevDesc").innerText = data.severity_desc;
 
-        // Multimodal Health Calculation
+        // Calculate Multimodal Health Index
         let abioticPenalty = 0;
         let abioticFactors = [];
 
         if (hum > 80) {
-            abioticFactors.push(`High Humidity (${hum}%) accelerates fungal sporulation.`);
+            abioticFactors.push(`Humidity (${hum}%) accelerates fungal sporulation.`);
             abioticPenalty += 35;
         }
         if (moist > 70) {
-            abioticFactors.push(`Soil saturation (${moist}%) causes root waterlogging stress.`);
+            abioticFactors.push(`Soil saturation (${moist}%) causes root hypoxia & waterlogging.`);
             abioticPenalty += 25;
         } else if (moist < 30) {
-            abioticFactors.push(`Soil moisture deficit (${moist}%) causing drought stress.`);
+            abioticFactors.push(`Moisture deficit (${moist}%) causing transpiration drought.`);
             abioticPenalty += 25;
         }
         if (temp > 33) {
-            abioticFactors.push(`Elevated ambient heat (${temp}°C) accelerates crop wilting.`);
+            abioticFactors.push(`Ambient heat (${temp}°C) accelerates crop heat stress.`);
             abioticPenalty += 20;
         } else if (temp < 16) {
             abioticFactors.push(`Low temperature (${temp}°C) limits defense metabolism.`);
@@ -774,20 +841,20 @@
         const healthScore = Math.max(0, 100 - totalStress).toFixed(1);
 
         document.getElementById("healthScoreVal").innerText = healthScore;
-        const statusEl = document.getElementById("healthStatusText");
+        const tierEl = document.getElementById("healthTier");
 
         if (healthScore >= 75) {
-            statusEl.innerText = "OPTIMAL / LOW RISK";
-            statusEl.style.color = "var(--success)";
+            tierEl.innerText = "OPTIMAL PHYSIOLOGY / LOW RISK";
+            document.getElementById("healthScoreVal").style.color = "#10b981";
         } else if (healthScore >= 45) {
-            statusEl.innerText = "MODERATE STRESS / MONITOR CLOSELY";
-            statusEl.style.color = "var(--warning)";
+            tierEl.innerText = "MODERATE MICROCLIMATE STRESS";
+            document.getElementById("healthScoreVal").style.color = "#f59e0b";
         } else {
-            statusEl.innerText = "CRITICAL / IMMEDIATE ACTION REQUIRED";
-            statusEl.style.color = "var(--danger)";
+            tierEl.innerText = "CRITICAL / IMMEDIATE INTERVENTION";
+            document.getElementById("healthScoreVal").style.color = "#ef4444";
         }
 
-        document.getElementById("abioticFactorList").innerHTML = abioticFactors.map(f => `&bull; ${f}`).join("<br>");
+        document.getElementById("abioticList").innerHTML = abioticFactors.map(f => `&bull; ${f}`).join("<br>");
 
         // Prescriptions
         document.getElementById("rxChemical").innerText = data.chemical_rx;
@@ -796,7 +863,7 @@
     }
 
     window.onload = function() {
-        renderLeaf(REAL_LEAF_IMAGES["early_blight"]);
+        renderCanvas();
         updateUI();
     };
 </script>
