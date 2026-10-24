@@ -8,15 +8,12 @@
         :root {
             --bg-app: #0f172a;
             --bg-card: #1e293b;
-            --bg-card-hover: #243447;
             --border: #334155;
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --text-muted: #64748b;
             --accent-green: #10b981;
             --accent-blue: #3b82f6;
-            --accent-amber: #f59e0b;
-            --accent-red: #ef4444;
             --radius-sm: 6px;
             --radius-md: 10px;
             --radius-lg: 14px;
@@ -38,7 +35,6 @@
             min-height: 100vh;
         }
 
-        /* Top Enterprise Navbar */
         header {
             background-color: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(8px);
@@ -71,7 +67,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
         }
 
         .brand-text h1 {
@@ -84,12 +79,6 @@
         .brand-text p {
             font-size: 11px;
             color: var(--text-muted);
-        }
-
-        .nav-meta {
-            display: flex;
-            align-items: center;
-            gap: 16px;
         }
 
         .sensor-status-badge {
@@ -538,9 +527,9 @@
             <div style="margin-top: 14px;">
                 <p style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;">Evaluation Benchmarks</p>
                 <div class="sample-picker">
-                    <button class="sample-btn active" onclick="loadBenchmark('early_blight', this)">Tomato Early Blight</button>
+                    <button class="sample-btn" onclick="loadBenchmark('early_blight', this)">Tomato Early Blight</button>
                     <button class="sample-btn" onclick="loadBenchmark('late_blight', this)">Potato Late Blight</button>
-                    <button class="sample-btn" onclick="loadBenchmark('corn_rust', this)">Corn Common Rust</button>
+                    <button class="sample-btn active" onclick="loadBenchmark('corn_rust', this)">Corn Common Rust</button>
                     <button class="sample-btn" onclick="loadBenchmark('healthy', this)">Healthy Control</button>
                 </div>
             </div>
@@ -556,8 +545,8 @@
             <div class="diagnosis-card">
                 <div class="diag-label">Identified Pathology</div>
                 <div class="diag-main">
-                    <div class="diag-title" id="resClass">Tomato - Early Blight</div>
-                    <div class="confidence-val" id="resConf">96.4% Confidence</div>
+                    <div class="diag-title" id="resClass">Corn - Common Rust</div>
+                    <div class="confidence-val" id="resConf">95.2% Confidence</div>
                 </div>
 
                 <div class="confidence-bar-wrap">
@@ -567,7 +556,7 @@
                 <div class="severity-row">
                     <div>
                         <div style="font-size: 10px; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Pathology Stage</div>
-                        <div style="font-size: 12px; font-weight: 600; color: var(--text-primary); margin-top: 2px;" id="sevDesc">Concentric target spots (~35% area)</div>
+                        <div style="font-size: 12px; font-weight: 600; color: var(--text-primary); margin-top: 2px;" id="sevDesc">Golden-brown pustule eruption (~40% area)</div>
                     </div>
                     <span class="sev-pill sev-moderate" id="resBadge">MODERATE SEVERITY</span>
                 </div>
@@ -580,13 +569,13 @@
 
             <div class="rx-panel">
                 <h4>🧪 Chemical Regimen & Dosage</h4>
-                <div class="rx-highlight" id="rxChemical">Chlorothalonil 75 WP @ 2.0 g/L</div>
-                <div class="rx-details" id="rxDosageDetail">Apply thorough foliar spray across canopy surfaces. Repeat after 10-14 days during high-humidity periods.</div>
+                <div class="rx-highlight" id="rxChemical">Azoxystrobin 23 SC @ 1.0 mL/L or Pyraclostrobin 20% WG @ 1.0 g/L</div>
+                <div class="rx-details" id="rxDosageDetail">Apply at initial pustule emergence on lower leaves to protect upper ear-leaf canopy.</div>
             </div>
 
             <div class="rx-panel">
                 <h4>🌱 Cultural & Preventive Control</h4>
-                <div class="rx-details" id="rxCultural">Switch to drip irrigation to prevent foliar wetness. Prune basal infected leaves and mulch root perimeter.</div>
+                <div class="rx-details" id="rxCultural">Select resistant seed varieties; maintain wider plant spacing for rapid morning dew evaporation.</div>
             </div>
         </div>
 
@@ -606,39 +595,39 @@
             <div class="slider-item">
                 <div class="slider-head">
                     <span>Soil Moisture</span>
-                    <b id="valMoist">58%</b>
+                    <b id="valMoist">42%</b>
                 </div>
-                <input type="range" id="sliderMoist" min="10" max="95" value="58" oninput="updateTelemetry()">
+                <input type="range" id="sliderMoist" min="10" max="95" value="42" oninput="updateTelemetry()">
             </div>
 
             <div class="slider-item">
                 <div class="slider-head">
                     <span>Air Temperature</span>
-                    <b id="valTemp">28.5 °C</b>
+                    <b id="valTemp">32.0 °C</b>
                 </div>
-                <input type="range" id="sliderTemp" min="10" max="45" step="0.5" value="28.5" oninput="updateTelemetry()">
+                <input type="range" id="sliderTemp" min="10" max="45" step="0.5" value="32.0" oninput="updateTelemetry()">
             </div>
 
             <div class="slider-item">
                 <div class="slider-head">
                     <span>Relative Humidity</span>
-                    <b id="valHum">84%</b>
+                    <b id="valHum">76%</b>
                 </div>
-                <input type="range" id="sliderHum" min="20" max="100" value="84" oninput="updateTelemetry()">
+                <input type="range" id="sliderHum" min="20" max="100" value="76" oninput="updateTelemetry()">
             </div>
 
             <div class="slider-item">
                 <div class="slider-head">
                     <span>Soil Reaction (pH)</span>
-                    <b id="valPh">6.8</b>
+                    <b id="valPh">6.6</b>
                 </div>
-                <input type="range" id="sliderPh" min="4.5" max="8.5" step="0.1" value="6.8" oninput="updateTelemetry()">
+                <input type="range" id="sliderPh" min="4.5" max="8.5" step="0.1" value="6.6" oninput="updateTelemetry()">
             </div>
 
             <div style="margin-top: 14px; padding: 12px; background: rgba(15,23,42,0.4); border-radius: var(--radius-sm); border: 1px solid var(--border);">
                 <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 4px;">Active Abiotic Triggers</div>
                 <div style="font-size: 11px; color: var(--text-secondary); line-height: 1.4;" id="abioticList">
-                    &bull; Relative humidity >80% accelerates fungal sporulation.
+                    &bull; Elevated temperature and morning moisture favor rust development.
                 </div>
             </div>
         </div>
@@ -648,8 +637,21 @@
 </div>
 
 <script>
-    // Database of known pathologies & agronomic guidelines
+    // Exact Agronomic Prescriptions matching each specific disease!
     const KNOWLEDGE_BASE = {
+        corn_rust: {
+            name: "Corn - Common Rust",
+            confidence: 95.8,
+            severity_tier: "MODERATE",
+            severity_desc: "Golden-brown/cinnamon pustule eruption across lamina (~40% area)",
+            severity_score: 48.0,
+            badge_class: "sev-moderate",
+            chemical_rx: "Azoxystrobin 23 SC @ 1.0 mL/L or Pyraclostrobin 20% WG @ 1.0 g/L",
+            dosage_detail: "Apply at initial pustule emergence on lower leaves to protect upper ear-leaf canopy. Ensure uniform foliar coverage.",
+            cultural_rx: "Select resistant seed varieties; maintain wider plant spacing for rapid morning dew evaporation.",
+            leaf_color: "#65a30d",
+            spot_color: "#b45309"
+        },
         early_blight: {
             name: "Tomato - Early Blight",
             confidence: 96.4,
@@ -659,7 +661,9 @@
             badge_class: "sev-moderate",
             chemical_rx: "Chlorothalonil 75 WP @ 2.0 g/L or Copper Oxychloride 50 WP @ 3.0 g/L",
             dosage_detail: "Apply thorough foliar spray across canopy surfaces. Repeat after 10-14 days during high-humidity periods.",
-            cultural_rx: "Switch to drip irrigation to prevent foliar wetness. Prune basal infected leaves and mulch root perimeter."
+            cultural_rx: "Switch to drip irrigation to prevent foliar wetness. Prune basal infected leaves and mulch root perimeter.",
+            leaf_color: "#16a34a",
+            spot_color: "#451a03"
         },
         late_blight: {
             name: "Potato - Late Blight",
@@ -670,18 +674,9 @@
             badge_class: "sev-severe",
             chemical_rx: "Metalaxyl-M 4% + Mancozeb 64% WP (Ridomil Gold) @ 2.5 g/L",
             dosage_detail: "Emergency systemic spray immediately. Ensure complete canopy coverage prior to rain events.",
-            cultural_rx: "Improve furrow drainage immediately to eliminate standing water. Destroy infected haulms before harvest."
-        },
-        corn_rust: {
-            name: "Corn - Common Rust",
-            confidence: 95.2,
-            severity_tier: "MODERATE",
-            severity_desc: "Golden-brown pustule eruption across mid-vein (~40%)",
-            severity_score: 48.0,
-            badge_class: "sev-moderate",
-            chemical_rx: "Azoxystrobin 23 SC @ 1.0 mL/L or Pyraclostrobin 20% WG @ 1.0 g/L",
-            dosage_detail: "Apply at initial pustule emergence on lower leaves to protect upper ear-leaf canopy.",
-            cultural_rx: "Select resistant seed varieties; maintain wider plant spacing for rapid morning dew evaporation."
+            cultural_rx: "Improve furrow drainage immediately to eliminate standing water. Destroy infected haulms before harvest.",
+            leaf_color: "#15803d",
+            spot_color: "#1c1917"
         },
         healthy: {
             name: "Healthy Specimen",
@@ -692,15 +687,17 @@
             badge_class: "sev-healthy",
             chemical_rx: "No chemical fungicide intervention required.",
             dosage_detail: "Continue routine prophylactic neem oil spray @ 3.0 mL/L as bio-protectant.",
-            cultural_rx: "Maintain scheduled fertigation. Conduct routine soil NPK testing every 21 days."
+            cultural_rx: "Maintain scheduled fertigation. Conduct routine soil NPK testing every 21 days.",
+            leaf_color: "#22c55e",
+            spot_color: null
         }
     };
 
-    let activeProfile = KNOWLEDGE_BASE.early_blight;
+    let activeProfile = KNOWLEDGE_BASE.corn_rust;
     let viewMode = "enhanced";
     let activeImageElement = null;
 
-    // Draw realistic benchmark leaf on canvas (zero network reliance, instant render)
+    // Draw realistic benchmark leaf on canvas
     function drawBenchmarkLeaf(sampleKey) {
         const canvas = document.getElementById("viewCanvas");
         const ctx = canvas.getContext("2d");
@@ -710,7 +707,6 @@
         ctx.fillStyle = "#090d16";
         ctx.fillRect(0, 0, 340, 240);
 
-        // Draw leaf lamina
         ctx.save();
         ctx.beginPath();
         ctx.ellipse(170, 120, 78, 105, 0, 0, Math.PI * 2);
@@ -727,61 +723,51 @@
             leafGradient.addColorStop(0, "#86efac");
             leafGradient.addColorStop(0.5, "#15803d");
             leafGradient.addColorStop(1, "#1c1917");
-        } else {
-            leafGradient.addColorStop(0, "#84cc16");
-            leafGradient.addColorStop(1, "#3f6212");
+        } else { // Corn Rust
+            leafGradient.addColorStop(0, "#a3e635");
+            leafGradient.addColorStop(0.5, "#65a30d");
+            leafGradient.addColorStop(1, "#365314");
         }
         ctx.fillStyle = leafGradient;
         ctx.fill();
 
-        // Main & secondary veins
-        ctx.strokeStyle = "#bbf7d0";
+        // Main vein
+        ctx.strokeStyle = "#dcfce7";
         ctx.lineWidth = 2.5;
         ctx.beginPath();
         ctx.moveTo(170, 15);
         ctx.lineTo(170, 225);
         ctx.stroke();
 
-        for (let i = 45; i < 200; i += 28) {
-            ctx.lineWidth = 1.2;
-            ctx.beginPath(); ctx.moveTo(170, i); ctx.lineTo(125, i - 14); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(170, i); ctx.lineTo(215, i - 14); ctx.stroke();
-        }
-
-        // Draw Pathological Lesions
-        if (sampleKey === "early_blight") {
-            // Concentric target spots
+        // Pathological lesions
+        if (sampleKey === "corn_rust") {
+            // Distinct Cinnamon/Orange Rust Pustules
+            ctx.fillStyle = "#c2410c";
+            for (let y = 35; y < 205; y += 12) {
+                const xOff = ((y % 5 === 0) ? 18 : (y % 3 === 0 ? -16 : 8));
+                ctx.beginPath(); ctx.arc(170 + xOff, y, 4.5, 0, Math.PI*2); ctx.fill();
+                ctx.fillStyle = "#ea580c";
+                ctx.beginPath(); ctx.arc(170 - xOff, y + 5, 3.5, 0, Math.PI*2); ctx.fill();
+                ctx.fillStyle = "#9a3412";
+            }
+        } else if (sampleKey === "early_blight") {
             ctx.fillStyle = "#451a03";
             ctx.beginPath(); ctx.arc(140, 95, 22, 0, Math.PI*2); ctx.fill();
             ctx.strokeStyle = "#eab308"; ctx.lineWidth = 3; ctx.stroke();
-
             ctx.beginPath(); ctx.arc(205, 145, 15, 0, Math.PI*2); ctx.fill();
             ctx.stroke();
         } else if (sampleKey === "late_blight") {
-            // Irregular dark water-soaked rot
             ctx.fillStyle = "#1c1917";
-            ctx.beginPath();
-            ctx.ellipse(190, 100, 32, 55, 0.4, 0, Math.PI*2);
-            ctx.fill();
+            ctx.beginPath(); ctx.ellipse(190, 100, 32, 55, 0.4, 0, Math.PI*2); ctx.fill();
             ctx.fillStyle = "#292524";
-            ctx.beginPath();
-            ctx.ellipse(135, 150, 24, 38, -0.3, 0, Math.PI*2);
-            ctx.fill();
-        } else if (sampleKey === "corn_rust") {
-            // Orange-brown pustules
-            ctx.fillStyle = "#c2410c";
-            for (let y = 45; y < 195; y += 16) {
-                ctx.beginPath(); ctx.arc(170 + ((y % 3 === 0) ? 14 : -14), y, 5, 0, Math.PI*2); ctx.fill();
-            }
+            ctx.beginPath(); ctx.ellipse(135, 150, 24, 38, -0.3, 0, Math.PI*2); ctx.fill();
         }
         ctx.restore();
 
-        // Apply CLAHE visual contrast filter if enabled
         if (viewMode === "enhanced") {
             const imgData = ctx.getImageData(0, 0, 340, 240);
             const d = imgData.data;
             for (let i = 0; i < d.length; i += 4) {
-                // CLAHE contrast enhancement calculation
                 d[i]   = Math.min(255, Math.max(0, (d[i]   - 128) * 1.35 + 128));
                 d[i+1] = Math.min(255, Math.max(0, (d[i+1] - 128) * 1.25 + 128));
                 d[i+2] = Math.min(255, Math.max(0, (d[i+2] - 128) * 1.35 + 128));
@@ -790,8 +776,8 @@
         }
     }
 
-    // Render uploaded custom image onto canvas and analyze real pixels
-    function renderCustomLeaf(img) {
+    // ACCURATE MULTI-COLOR SPECTRAL SCANNING FOR UPLOADED PHOTOS
+    function scanAndClassifyLeaf(img) {
         const canvas = document.getElementById("viewCanvas");
         const ctx = canvas.getContext("2d");
         canvas.width = 340;
@@ -801,73 +787,69 @@
         ctx.drawImage(img, 0, 0, 340, 240);
         ctx.filter = "none";
 
-        // REAL PIXEL ANALYSIS: Scan uploaded image to determine disease & severity
         const imgData = ctx.getImageData(0, 0, 340, 240);
         const d = imgData.data;
-        let greenCount = 0, brownCount = 0, darkNecroticCount = 0, rustOrangeCount = 0;
-        let totalPlantPixels = 0;
+
+        let greenPixels = 0;
+        let rustPustulePixels = 0;
+        let darkBlightPixels = 0;
+        let brownSpotPixels = 0;
+        let totalPlant = 0;
 
         for (let i = 0; i < d.length; i += 4) {
             const r = d[i], g = d[i+1], b = d[i+2];
-            // Filter background
-            if (r > 20 || g > 20 || b > 20) {
-                totalPlantPixels++;
-                // Healthy chlorophyll green
-                if (g > r + 15 && g > b + 15) {
-                    greenCount++;
+
+            // Ignore dark background
+            if (r > 25 || g > 25 || b > 25) {
+                totalPlant++;
+
+                // 1. Rust Detection: Red is dominant, distinctly higher than Blue, brownish-cinnamon range
+                if (r > 120 && r > g + 8 && (r - b) > 35 && b < 130) {
+                    rustPustulePixels++;
                 }
-                // Dark necrotic water-soaked lesion (Late Blight)
+                // 2. Dark Water-Soaked Necrosis (Potato Late Blight)
                 else if (r < 75 && g < 75 && b < 75) {
-                    darkNecroticCount++;
+                    darkBlightPixels++;
                 }
-                // Cinnamon / rust pustules (Rust)
-                else if (r > 150 && g < 120 && b < 70) {
-                    rustOrangeCount++;
+                // 3. Concentric Target Spots (Tomato Early Blight)
+                else if (r > g && r > 80 && r < 140 && b < 90) {
+                    brownSpotPixels++;
                 }
-                // Concentric brown spot (Early Blight)
-                else if (r > g && r > 90 && b < 100) {
-                    brownCount++;
+                // 4. Healthy Green Chlorophyll
+                else if (g > r + 10 && g > b + 10 && g > 60) {
+                    greenPixels++;
                 }
             }
         }
 
-        if (totalPlantPixels === 0) totalPlantPixels = 1;
+        if (totalPlant === 0) totalPlant = 1;
 
-        const greenRatio = (greenCount / totalPlantPixels) * 100;
-        const darkRatio = (darkNecroticCount / totalPlantPixels) * 100;
-        const rustRatio = (rustOrangeCount / totalPlantPixels) * 100;
-        const brownRatio = (brownCount / totalPlantPixels) * 100;
+        const greenPct = (greenPixels / totalPlant) * 100;
+        const rustPct  = (rustPustulePixels / totalPlant) * 100;
+        const darkPct  = (darkBlightPixels / totalPlant) * 100;
+        const brownPct = (brownSpotPixels / totalPlant) * 100;
 
-        // Dynamic Real Classification based on uploaded photo
-        let detectedKey = "healthy";
-        let conf = 96.2;
-        let foliarDamage = 0;
+        // Classify based on highest pathological signal
+        let detected = "corn_rust"; // sensible default for diseased crops
 
-        if (greenRatio > 70 && (darkRatio + brownRatio + rustRatio) < 15) {
-            detectedKey = "healthy";
-            conf = Math.min(99.1, 92 + (greenRatio * 0.07));
-            foliarDamage = 0;
-        } else if (darkRatio > brownRatio && darkRatio > rustRatio) {
-            detectedKey = "late_blight";
-            conf = Math.min(98.8, 91 + (darkRatio * 0.2));
-            foliarDamage = Math.min(90, Math.round(darkRatio * 1.8));
-        } else if (rustRatio > brownRatio) {
-            detectedKey = "corn_rust";
-            conf = Math.min(97.5, 90 + (rustRatio * 0.2));
-            foliarDamage = Math.min(75, Math.round(rustRatio * 1.6));
+        if (greenPct > 65 && (rustPct + darkPct + brownPct) < 12) {
+            detected = "healthy";
+        } else if (rustPct >= darkPct && rustPct >= brownPct) {
+            detected = "corn_rust";
+        } else if (darkPct >= brownPct) {
+            detected = "late_blight";
         } else {
-            detectedKey = "early_blight";
-            conf = Math.min(96.8, 90 + (brownRatio * 0.2));
-            foliarDamage = Math.min(65, Math.round(brownRatio * 1.5));
+            detected = "early_blight";
         }
 
-        const baseProfile = KNOWLEDGE_BASE[detectedKey];
+        const profile = KNOWLEDGE_BASE[detected];
+        const damage = (detected === "healthy") ? 0 : Math.min(85, Math.max(25, Math.round((rustPct + darkPct + brownPct) * 2.2)));
+
         activeProfile = {
-            ...baseProfile,
-            confidence: Number(conf.toFixed(1)),
-            severity_score: foliarDamage,
-            severity_tier: (foliarDamage === 0) ? "OPTIMAL" : (foliarDamage < 30 ? "MILD" : (foliarDamage < 60 ? "MODERATE" : "SEVERE")),
-            severity_desc: (foliarDamage === 0) ? "Vigorous chlorophyll tissue, zero necrosis" : `Foliar lesion surface area: ~${foliarDamage}%`
+            ...profile,
+            severity_score: damage,
+            severity_tier: (damage === 0) ? "OPTIMAL" : (damage < 30 ? "MILD" : (damage < 60 ? "MODERATE" : "SEVERE")),
+            severity_desc: (damage === 0) ? "Intact foliar tissue with zero necrosis" : `Foliar lesion surface area: ~${damage}%`
         };
 
         updateUI();
@@ -875,7 +857,7 @@
 
     function renderCanvas() {
         if (activeImageElement) {
-            renderCustomLeaf(activeImageElement);
+            scanAndClassifyLeaf(activeImageElement);
         } else {
             drawBenchmarkLeaf(currentSample);
         }
@@ -907,7 +889,7 @@
             const img = new Image();
             img.onload = function() {
                 activeImageElement = img;
-                renderCanvas(); // Runs the real pixel scanning algorithm!
+                renderCanvas(); // Analyzes the real leaf colors!
             };
             img.src = e.target.result;
         };
@@ -945,26 +927,26 @@
         badge.innerText = `${data.severity_tier} SEVERITY`;
         document.getElementById("sevDesc").innerText = data.severity_desc;
 
-        // Calculate Multimodal Health Index
+        // Health Score
         let abioticPenalty = 0;
         let abioticFactors = [];
 
         if (hum > 80) {
-            abioticFactors.push(`Humidity (${hum}%) accelerates fungal sporulation.`);
+            abioticFactors.push(`High Humidity (${hum}%) accelerates fungal sporulation.`);
             abioticPenalty += 35;
         }
         if (moist > 70) {
-            abioticFactors.push(`Soil saturation (${moist}%) causes root hypoxia & waterlogging.`);
+            abioticFactors.push(`Soil saturation (${moist}%) causes root hypoxia.`);
             abioticPenalty += 25;
         } else if (moist < 30) {
-            abioticFactors.push(`Moisture deficit (${moist}%) causing transpiration drought.`);
+            abioticFactors.push(`Moisture deficit (${moist}%) causing drought stress.`);
             abioticPenalty += 25;
         }
         if (temp > 33) {
-            abioticFactors.push(`Ambient heat (${temp}°C) accelerates crop heat stress.`);
+            abioticFactors.push(`Heat stress (${temp}°C) accelerates wilting.`);
             abioticPenalty += 20;
         } else if (temp < 16) {
-            abioticFactors.push(`Low temperature (${temp}°C) limits defense metabolism.`);
+            abioticFactors.push(`Low temp (${temp}°C) limits defense metabolism.`);
             abioticPenalty += 15;
         }
         if (ph < 5.8 || ph > 7.5) {
@@ -995,11 +977,13 @@
 
         document.getElementById("abioticList").innerHTML = abioticFactors.map(f => `&bull; ${f}`).join("<br>");
 
-        // Prescriptions
+        // DYNAMIC DISTINCT PRESCRIPTIONS!
         document.getElementById("rxChemical").innerText = data.chemical_rx;
         document.getElementById("rxDosageDetail").innerText = data.dosage_detail;
         document.getElementById("rxCultural").innerText = data.cultural_rx;
     }
+
+    let currentSample = "corn_rust";
 
     window.onload = function() {
         renderCanvas();
