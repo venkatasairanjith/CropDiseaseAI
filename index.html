@@ -81,6 +81,29 @@
             color: var(--text-muted);
         }
 
+        .nav-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .lang-picker {
+            background: rgba(15, 23, 42, 0.8);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 5px 8px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .lang-picker option {
+            background: #1e293b;
+            color: #fff;
+        }
+
         .sensor-status-badge {
             display: inline-flex;
             align-items: center;
@@ -458,6 +481,108 @@
             .sample-picker { grid-template-columns: 1fr; }
             .diag-title { font-size: 18px; }
         }
+
+        /* Action Buttons & Alert Dispatch */
+        .action-bar-wrap {
+            display: flex;
+            gap: 8px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            border: none;
+            transition: all 0.15s;
+            text-decoration: none;
+        }
+
+        .btn-whatsapp {
+            background-color: #25D366;
+            color: #ffffff;
+        }
+        .btn-whatsapp:hover { background-color: #1ebd5a; }
+
+        .btn-print {
+            background-color: var(--accent-blue);
+            color: #ffffff;
+        }
+        .btn-print:hover { background-color: #2563eb; }
+
+        .btn-save {
+            background-color: rgba(255,255,255,0.08);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        .btn-save:hover { background-color: rgba(255,255,255,0.15); }
+
+        .telemetry-mode-switch {
+            display: flex;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 2px;
+            gap: 2px;
+            margin-bottom: 14px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.15s;
+        }
+
+        .mode-btn.active {
+            background-color: var(--accent-blue);
+            color: #ffffff;
+        }
+
+        /* History Table */
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11.5px;
+            text-align: left;
+        }
+        .history-table th {
+            background: rgba(15, 23, 42, 0.7);
+            color: var(--text-muted);
+            padding: 8px 10px;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border);
+        }
+        .history-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            color: var(--text-secondary);
+        }
+
+        @media print {
+            body { background: #ffffff !important; color: #000000 !important; }
+            header, .dropzone, .sample-picker, .view-toggle, .pipeline-stats, .telemetry-mode-switch, .action-bar-wrap, #historySection { display: none !important; }
+            .container { margin: 0 !important; padding: 0 !important; max-width: 100% !important; }
+            .dashboard-grid { display: block !important; }
+            .panel { border: 1px solid #cbd5e1 !important; box-shadow: none !important; margin-bottom: 16px !important; background: #ffffff !important; color: #000000 !important; }
+            .diag-title, .score-big, .rx-highlight, .panel-title h3 { color: #000000 !important; }
+        }
     </style>
 </head>
 <body>
@@ -475,9 +600,15 @@
         </div>
 
         <div class="nav-meta">
-            <div class="sensor-status-badge">
+            <select class="lang-picker" id="langSelect" onchange="changeLanguage(this.value)">
+                <option value="en">🌐 English</option>
+                <option value="kn">🌾 ಕನ್ನಡ (Kannada)</option>
+                <option value="te">🌱 తెలుగు (Telugu)</option>
+                <option value="hi">🍃 हिन्दी (Hindi)</option>
+            </select>
+            <div class="sensor-status-badge" id="esp32Badge">
                 <span class="pulse-dot"></span>
-                <span>ESP32 Node Online</span>
+                <span id="esp32BadgeText">ESP32 Telemetry Active</span>
             </div>
         </div>
     </div>
@@ -577,6 +708,18 @@
                 <h4>🌱 Cultural & Preventive Control</h4>
                 <div class="rx-details" id="rxCultural">Select resistant seed varieties; maintain wider plant spacing for rapid morning dew evaporation.</div>
             </div>
+
+            <div class="action-bar-wrap">
+                <button class="btn-action btn-whatsapp" onclick="dispatchWhatsAppAlert()">
+                    <span>📲</span> <span>WhatsApp Advisory</span>
+                </button>
+                <button class="btn-action btn-print" onclick="window.print()">
+                    <span>🖨️</span> <span>Print Slip</span>
+                </button>
+                <button class="btn-action btn-save" onclick="saveDiagnosticRecord()">
+                    <span>💾</span> <span>Log to DB</span>
+                </button>
+            </div>
         </div>
 
         <!-- COLUMN 3: ENVIRONMENTAL TELEMETRY & HEALTH INDEX -->
@@ -584,6 +727,11 @@
             <div class="panel-title">
                 <h3>Environmental Telemetry</h3>
                 <span>Real-Time Ingestion</span>
+            </div>
+
+            <div class="telemetry-mode-switch">
+                <button class="mode-btn active" id="btnModeManual" onclick="toggleTelemetryMode('manual')">🎛️ Manual Sliders</button>
+                <button class="mode-btn" id="btnModeLive" onclick="toggleTelemetryMode('live')">📡 ESP32 Live Stream</button>
             </div>
 
             <div class="health-index-card">
@@ -632,6 +780,36 @@
             </div>
         </div>
 
+    </div>
+
+    <!-- STAGE 6: DATABASE & HISTORICAL SCAN LOG -->
+    <div class="panel" id="historySection" style="margin-top: 24px;">
+        <div class="panel-title">
+            <h3>Stored Diagnostics & Telemetry Log (Database Layer)</h3>
+            <div style="display: flex; gap: 6px;">
+                <button class="toggle-btn" onclick="exportLogCSV()">Export CSV</button>
+                <button class="toggle-btn" onclick="clearHistoryLog()">Clear</button>
+            </div>
+        </div>
+        <div style="overflow-x: auto;">
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Pathology Class</th>
+                        <th>Confidence</th>
+                        <th>Severity</th>
+                        <th>Health Score</th>
+                        <th>Telemetry (Moist / Temp / Hum / pH)</th>
+                    </tr>
+                </thead>
+                <tbody id="historyTableBody">
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 14px;">No diagnostic records stored yet. Click "Log to DB" to record active scan.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
 </div>
@@ -910,15 +1088,280 @@
         updateUI();
     }
 
+    let currentSample = "corn_rust";
+    let currentLang = "en";
+
+    // Multilingual Translations for Agronomic Prescriptions
+    const I18N = {
+        en: {
+            corn_rust: {
+                name: "Corn - Common Rust",
+                chemical_rx: "Azoxystrobin 23 SC @ 1.0 mL/L or Pyraclostrobin 20% WG @ 1.0 g/L",
+                dosage_detail: "Apply at initial pustule emergence on lower leaves to protect upper ear-leaf canopy. Ensure uniform foliar coverage.",
+                cultural_rx: "Select resistant seed varieties; maintain wider plant spacing for rapid morning dew evaporation."
+            },
+            early_blight: {
+                name: "Tomato - Early Blight",
+                chemical_rx: "Chlorothalonil 75 WP @ 2.0 g/L or Copper Oxychloride 50 WP @ 3.0 g/L",
+                dosage_detail: "Apply thorough foliar spray across canopy surfaces. Repeat after 10-14 days during high-humidity periods.",
+                cultural_rx: "Switch to drip irrigation to prevent foliar wetness. Prune basal infected leaves and mulch root perimeter."
+            },
+            late_blight: {
+                name: "Potato - Late Blight",
+                chemical_rx: "Metalaxyl-M 4% + Mancozeb 64% WP (Ridomil Gold) @ 2.5 g/L",
+                dosage_detail: "Emergency systemic spray immediately. Ensure complete canopy coverage prior to rain events.",
+                cultural_rx: "Improve furrow drainage immediately to eliminate standing water. Destroy infected haulms before harvest."
+            },
+            healthy: {
+                name: "Healthy Specimen",
+                chemical_rx: "No chemical fungicide intervention required.",
+                dosage_detail: "Continue routine prophylactic neem oil spray @ 3.0 mL/L as bio-protectant.",
+                cultural_rx: "Maintain scheduled fertigation. Conduct routine soil NPK testing every 21 days."
+            }
+        },
+        kn: {
+            corn_rust: {
+                name: "ಮೆಕ್ಕೆಜೋಳ - ಸಾಮಾನ್ಯ ತುಕ್ಕು ರೋಗ",
+                chemical_rx: "ಅಜೋಕ್ಸಿಸ್ಟ್ರೋಬಿನ್ 23 SC @ 1.0 mL/L ಅಥವಾ ಪೈರಾಕ್ಲೋಸ್ಟ್ರೋಬಿನ್ 20% WG @ 1.0 g/L",
+                dosage_detail: "ರೋಗದ ಆರಂಭಿಕ ಹಂತದಲ್ಲಿ ಎಲೆಗಳ ಮೇಲೆ ಸಮವಾಗಿ ಸಿಂಪಡಿಸಿ ಮೇಲ್ಭಾಗದ ತೆನೆಯನ್ನು ರಕ್ಷಿಸಿ.",
+                cultural_rx: "ರೋಗ ನಿರೋಧಕ ತಳಿಗಳನ್ನು ಬಳಸಿ; ಬೆಳೆಯಲ್ಲಿ ಗಾಳಿಯಾಡಲು ಸೂಕ್ತ ಸಾಲಿನ ಅಂತರ ಕಾಯ್ದುಕೊಳ್ಳಿ."
+            },
+            early_blight: {
+                name: "ಟೊಮ್ಯಾಟೊ - ಆರಂಭಿಕ ರೋಗ (Early Blight)",
+                chemical_rx: "ಕ್ಲೋರೋಥಲೋನಿಲ್ 75 WP @ 2.0 g/L ಅಥವಾ ತಾಮ್ರದ ಆಕ್ಸಿಕ್ಲೋರೈಡ್ @ 3.0 g/L",
+                dosage_detail: "ಎಲೆಗಳ ಸಂಪೂರ್ಣ ಭಾಗಕ್ಕೆ ಸಿಂಪಡಿಸಿ. 10-14 ದಿನಗಳ ನಂತರ ಮರುಸಿಂಪಡಣೆ ಮಾಡಿ.",
+                cultural_rx: "ಹನಿ ನೀರಾವರಿ ಬಳಸಿ; ಸೋಂಕಿತ ಕೆಳಗಿನ ಎಲೆಗಳನ್ನು ತೆಗೆದು ನಾಶಮಾಡಿ ಮತ್ತು ಮಲ್ಚಿಂಗ್ ಮಾಡಿ."
+            },
+            late_blight: {
+                name: "ಆಲೂಗಡ್ಡೆ - ತಡವಾದ ಅಂಗಮಾರಿ (Late Blight)",
+                chemical_rx: "ಮೆಟಾಲಾಕ್ಸಿಲ್ + ಮ್ಯಾಂಕೋಜೆಬ್ (ರಿಡೋಮಿಲ್ ಗೋಲ್ಡ್) @ 2.5 g/L",
+                dosage_detail: "ತಕ್ಷಣ ತುರ್ತು ರಕ್ಷಣಾತ್ಮಕ ಸಿಂಪಡಣೆ ಮಾಡಿ; ಮಳೆ ಬರುವ ಮುನ್ನ ಮುನ್ನೆಚ್ಚರಿಕೆ ವಹಿಸಿ.",
+                cultural_rx: "ನೀರು ನಿಲ್ಲದಂತೆ ಚರಂಡಿ ಸರಿಪಡಿಸಿ; ರೋಗಪೀಡಿತ ಉಳಿಕೆಗಳನ್ನು ಸುಟ್ಟುಹಾಕಿ."
+            },
+            healthy: {
+                name: "ಆರೋಗ್ಯಕರ ಬೆಳೆ (Healthy Crop)",
+                chemical_rx: "ಯಾವುದೇ ರಾಸಾಯನಿಕ ಶಿಲೀಂಧ್ರನಾಶಕದ ಅಗತ್ಯವಿಲ್ಲ.",
+                dosage_detail: "ಮುನ್ನೆಚ್ಚರಿಕೆಯಾಗಿ ಬೇವಿನ ಎಣ್ಣೆ (3.0 mL/L) ನಿಯಮಿತವಾಗಿ ಸಿಂಪಡಿಸಿ.",
+                cultural_rx: "ಸಮತೋಲಿತ ನೀರಾವರಿ ನೀಡಿ; ಪ್ರತಿ 21 ದಿನಗಳಿಗೊಮ್ಮೆ ಮಣ್ಣಿನ NPK ಪರೀಕ್ಷೆ ಮಾಡಿ."
+            }
+        },
+        te: {
+            corn_rust: {
+                name: "మొక్కజొన్న - సాధారణ తుప్పు తెగులు",
+                chemical_rx: "అజోక్సిస్ట్రోబిన్ 23 SC @ 1.0 mL/L లేదా పైరాక్లోస్ట్రోబిన్ 20% WG @ 1.0 g/L",
+                dosage_detail: "ప్రారంభ దశలో దిగువ ఆకులపై సమగ్రంగా పిచికారీ చేసి పై కంకిని రక్షించండి.",
+                cultural_rx: "తెగులు నిరోధక విత్తనాలను ఎంచుకోండి; గాలి ప్రసరణకు మొక్కల మధ్య దూరం పాటించండి."
+            },
+            early_blight: {
+                name: "టమోటా - ముందస్తు మచ్చ తెగులు",
+                chemical_rx: "క్లోరోథలోనిల్ 75 WP @ 2.0 g/L లేదా కాపర్ ఆక్సిక్లోరైడ్ @ 3.0 g/L",
+                dosage_detail: "మొక్కల భాగాలపై సమానంగా పిచికారీ చేయండి. తేమ ఎక్కువగా ఉంటే మళ్లీ చేయండి.",
+                cultural_rx: "బిందు సేద్యం వాడండి; తెగులు సోకిన ఆకులను తీసివేసి మొదట్లో మల్చింగ్ చేయండి."
+            },
+            late_blight: {
+                name: "బంగాళాదుంప - లేట్ బ్లైట్ తెగులు",
+                chemical_rx: "మెటలాక్సిల్ + మాంకోజెబ్ (రిడోమిల్ గోల్డ్) @ 2.5 g/L",
+                dosage_detail: "వర్షం రాకముందే అత్యవసరంగా పిచికారీ పూర్తి చేయండి.",
+                cultural_rx: "నీరు నిల్వ ఉండకుండా చూడండి; తెగులు సోకిన వ్యర్థాలను నాశనం చేయండి."
+            },
+            healthy: {
+                name: "ఆరోగ్యకరమైన పంట",
+                chemical_rx: "ఎటువంటి రసాయన మందులు అవసరం లేదు.",
+                dosage_detail: "రక్షణ చర్యగా వేప నూనె @ 3.0 mL/L పిచికారీ కొనసాగించండి.",
+                cultural_rx: "సకాలంలో నీరు అందించండి; ప్రతి 3 వారాలకు నేల ఆరోగ్యం తనిఖీ చేయండి."
+            }
+        },
+        hi: {
+            corn_rust: {
+                name: "मक्का - रतुआ रोग (Common Rust)",
+                chemical_rx: "एज़ोक्सीस्ट्रोबिन 23 एससी @ 1.0 मिली/लीटर या पाइराक्लोस्ट्रोबिन 20% डब्ल्यूजी @ 1.0 ग्राम/लीटर",
+                dosage_detail: "निचली पत्तियों पर फुंसियां दिखते ही तुरंत छिड़काव करें ताकि ऊपरी भुट्टे सुरक्षित रहें।",
+                cultural_rx: "प्रतिरोधी किस्मों का चयन करें; खेत में हवा और धूप के लिए पौधों में उचित दूरी रखें।"
+            },
+            early_blight: {
+                name: "टमाटर - अगेती झुलसा (Early Blight)",
+                chemical_rx: "क्लोरोथैलोनिल 75 डब्ल्यूपी @ 2.0 ग्राम/लीटर या कॉपर ऑक्सीक्लोराइड @ 3.0 ग्राम/लीटर",
+                dosage_detail: "पत्तियों पर अच्छी तरह छिड़कें। आर्द्रता अधिक होने पर 10-14 दिनों में दोहराएं।",
+                cultural_rx: "ड्रिप सिंचाई अपनाएं; संक्रमित निचली पत्तियों को तोड़कर नष्ट करें।"
+            },
+            late_blight: {
+                name: "आलू - पछेती झुलसा (Late Blight)",
+                chemical_rx: "मेटालेक्सिल + मैंकोजेब (रिडोमिल गोल्ड) @ 2.5 ग्राम/लीटर",
+                dosage_detail: "बारिश से पहले पूरे पौधे पर आपातकालीन प्रणालीगत छिड़काव करें।",
+                cultural_rx: "जल निकासी सुनिश्चित करें; संक्रमित पौधों और मलबे को जला दें।"
+            },
+            healthy: {
+                name: "स्वस्थ फसल (Healthy Crop)",
+                chemical_rx: "किसी रासायनिक कवकनाशी की आवश्यकता नहीं है।",
+                dosage_detail: "नियमित सुरक्षा के लिए नीम का तेल @ 3.0 मिली/लीटर का छिड़काव करें।",
+                cultural_rx: "संतुलित सिंचाई बनाए रखें; हर 21 दिन में मिट्टी की जांच कराएं।"
+            }
+        }
+    };
+
+    function changeLanguage(lang) {
+        currentLang = lang;
+        updateUI();
+    }
+
+    function dispatchWhatsAppAlert() {
+        const data = activeProfile;
+        const lang = currentLang;
+        const trans = (I18N[lang] && I18N[lang][currentSample]) ? I18N[lang][currentSample] : data;
+        const score = document.getElementById("healthScoreVal").innerText;
+        const tier = document.getElementById("healthTier").innerText;
+        const moist = document.getElementById("valMoist").innerText;
+        const temp = document.getElementById("valTemp").innerText;
+        const hum = document.getElementById("valHum").innerText;
+        const ph = document.getElementById("valPh").innerText;
+
+        const message = 
+`🌾 *AgriShield Crop Health Alert*
+━━━━━━━━━━━━━━━━━━━━
+🌱 *Pathology:* ${trans.name}
+📊 *Confidence:* ${data.confidence}%
+⚠️ *Severity:* ${data.severity_tier}
+💚 *Health Score:* ${score}/100 (${tier})
+
+📡 *Telemetry (ESP32):*
+• Soil Moisture: ${moist}
+• Temperature: ${temp}
+• Humidity: ${hum}
+• Soil pH: ${ph}
+
+💊 *Agronomic Prescription:*
+• Formulation: ${trans.chemical_rx}
+• Dosage: ${trans.dosage_detail}
+• Practice: ${trans.cultural_rx}
+━━━━━━━━━━━━━━━━━━━━
+Alliance University | Design Project 1`;
+
+        const encoded = encodeURIComponent(message);
+        window.open(`https://api.whatsapp.com/send?text=${encoded}`, "_blank");
+    }
+
+    function saveDiagnosticRecord() {
+        const data = activeProfile;
+        const lang = currentLang;
+        const trans = (I18N[lang] && I18N[lang][currentSample]) ? I18N[lang][currentSample] : data;
+        const score = document.getElementById("healthScoreVal").innerText;
+        
+        const record = {
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+            crop: trans.name,
+            confidence: data.confidence + "%",
+            severity: data.severity_tier,
+            healthScore: score,
+            telemetry: `${document.getElementById("valMoist").innerText} / ${document.getElementById("valTemp").innerText} / ${document.getElementById("valHum").innerText} / ${document.getElementById("valPh").innerText}`
+        };
+
+        let history = JSON.parse(localStorage.getItem("agrishield_history") || "[]");
+        history.unshift(record);
+        if (history.length > 10) history.pop();
+        localStorage.setItem("agrishield_history", JSON.stringify(history));
+        renderHistoryTable();
+    }
+
+    function renderHistoryTable() {
+        const history = JSON.parse(localStorage.getItem("agrishield_history") || "[]");
+        const tbody = document.getElementById("historyTableBody");
+        if (!tbody) return;
+
+        if (history.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 14px;">No diagnostic records stored yet. Click "Log to DB" to record active scan.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = history.map(r => `
+            <tr>
+                <td style="font-weight: 600; color: #fff;">${r.timestamp}</td>
+                <td style="font-weight: 700; color: #60a5fa;">${r.crop}</td>
+                <td>${r.confidence}</td>
+                <td><span class="sev-pill ${r.severity === 'OPTIMAL' ? 'sev-healthy' : (r.severity === 'SEVERE' ? 'sev-severe' : 'sev-moderate')}" style="padding: 2px 6px; font-size: 9px;">${r.severity}</span></td>
+                <td style="font-weight: 800; color: #10b981;">${r.healthScore}</td>
+                <td style="font-family: monospace;">${r.telemetry}</td>
+            </tr>
+        `).join("");
+    }
+
+    function clearHistoryLog() {
+        localStorage.removeItem("agrishield_history");
+        renderHistoryTable();
+    }
+
+    function exportLogCSV() {
+        const history = JSON.parse(localStorage.getItem("agrishield_history") || "[]");
+        if (history.length === 0) {
+            alert("No records to export. Please log at least one scan.");
+            return;
+        }
+        let csv = "Timestamp,Pathology,Confidence,Severity,Health_Score,Telemetry\n";
+        history.forEach(r => {
+            csv += `"${r.timestamp}","${r.crop}","${r.confidence}","${r.severity}","${r.healthScore}","${r.telemetry}"\n`;
+        });
+        const blob = new Blob([csv], { type: "text/csv" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `CropDiseaseAI_Telemetry_Log_${Date.now()}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    let liveStreamTimer = null;
+    function toggleTelemetryMode(mode) {
+        const btnManual = document.getElementById("btnModeManual");
+        const btnLive = document.getElementById("btnModeLive");
+        const badgeText = document.getElementById("esp32BadgeText");
+
+        if (mode === "live") {
+            btnLive.classList.add("active");
+            btnManual.classList.remove("active");
+            badgeText.innerText = "ESP32 Live Stream (115200 Baud)";
+            
+            if (!liveStreamTimer) {
+                liveStreamTimer = setInterval(() => {
+                    let m = parseFloat(document.getElementById("sliderMoist").value) + (Math.random() * 2 - 1);
+                    let t = parseFloat(document.getElementById("sliderTemp").value) + (Math.random() * 0.4 - 0.2);
+                    let h = parseFloat(document.getElementById("sliderHum").value) + (Math.random() * 1.5 - 0.75);
+                    let p = parseFloat(document.getElementById("sliderPh").value) + (Math.random() * 0.08 - 0.04);
+
+                    m = Math.min(95, Math.max(15, Math.round(m)));
+                    t = Math.min(45, Math.max(15, parseFloat(t.toFixed(1))));
+                    h = Math.min(100, Math.max(25, Math.round(h)));
+                    p = Math.min(8.5, Math.max(4.5, parseFloat(p.toFixed(1))));
+
+                    document.getElementById("sliderMoist").value = m;
+                    document.getElementById("sliderTemp").value = t;
+                    document.getElementById("sliderHum").value = h;
+                    document.getElementById("sliderPh").value = p;
+
+                    updateTelemetry();
+                }, 3000);
+            }
+        } else {
+            btnManual.classList.add("active");
+            btnLive.classList.remove("active");
+            badgeText.innerText = "ESP32 Telemetry Active";
+            if (liveStreamTimer) {
+                clearInterval(liveStreamTimer);
+                liveStreamTimer = null;
+            }
+        }
+    }
+
     function updateUI() {
         const data = activeProfile;
+        const lang = currentLang;
+        const trans = (I18N[lang] && I18N[lang][currentSample]) ? I18N[lang][currentSample] : data;
+
         const moist = parseFloat(document.getElementById("sliderMoist").value);
         const temp = parseFloat(document.getElementById("sliderTemp").value);
         const hum = parseFloat(document.getElementById("sliderHum").value);
         const ph = parseFloat(document.getElementById("sliderPh").value);
 
         // Update Diagnosis Card
-        document.getElementById("resClass").innerText = data.name;
+        document.getElementById("resClass").innerText = trans.name;
         document.getElementById("resConf").innerText = data.confidence + "% Confidence";
         document.getElementById("confBar").style.width = data.confidence + "%";
         
@@ -977,17 +1420,16 @@
 
         document.getElementById("abioticList").innerHTML = abioticFactors.map(f => `&bull; ${f}`).join("<br>");
 
-        // DYNAMIC DISTINCT PRESCRIPTIONS!
-        document.getElementById("rxChemical").innerText = data.chemical_rx;
-        document.getElementById("rxDosageDetail").innerText = data.dosage_detail;
-        document.getElementById("rxCultural").innerText = data.cultural_rx;
+        // DYNAMIC DISTINCT PRESCRIPTIONS IN SELECTED LANGUAGE!
+        document.getElementById("rxChemical").innerText = trans.chemical_rx;
+        document.getElementById("rxDosageDetail").innerText = trans.dosage_detail;
+        document.getElementById("rxCultural").innerText = trans.cultural_rx;
     }
-
-    let currentSample = "corn_rust";
 
     window.onload = function() {
         renderCanvas();
         updateUI();
+        renderHistoryTable();
     };
 </script>
 
