@@ -482,6 +482,58 @@
             .diag-title { font-size: 18px; }
         }
 
+        /* Tabs Navigation for Uncluttered Layout */
+        .view-tabs {
+            display: flex;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 4px;
+            gap: 6px;
+            margin-bottom: 24px;
+            max-width: 580px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 700;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.15s;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            background-color: var(--accent-blue);
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+
+        .tab-view {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .tab-view-single {
+            display: block;
+        }
+
+        @media (max-width: 880px) {
+            .tab-view { grid-template-columns: 1fr; }
+            .view-tabs { max-width: 100%; }
+        }
+
         /* Action Buttons & Alert Dispatch */
         .action-bar-wrap {
             display: flex;
@@ -616,9 +668,26 @@
 
 <div class="container">
 
-    <div class="dashboard-grid">
+    <!-- TOP SECTION: TABS FOR BREATHING ROOM -->
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin-bottom: 22px;">
+        <nav class="view-tabs" style="margin-bottom: 0;">
+            <button class="tab-btn active" id="tabBtnDiag" onclick="switchMainTab('tab-diagnosis', this)">🔬 Crop Diagnosis</button>
+            <button class="tab-btn" id="tabBtnTelem" onclick="switchMainTab('tab-telemetry', this)">📡 Field Telemetry</button>
+            <button class="tab-btn" id="tabBtnLog" onclick="switchMainTab('tab-history', this)">📁 Stored Logs</button>
+        </nav>
 
-        <!-- COLUMN 1: IMAGE INGESTION & PIPELINE -->
+        <!-- Compact quick-look health score pill always visible -->
+        <div onclick="switchMainTab('tab-telemetry', document.getElementById('tabBtnTelem'))" style="cursor: pointer; display: inline-flex; align-items: center; gap: 8px; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); padding: 7px 14px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 700; color: #10b981;">
+            <span>💚 Crop Health Score:</span>
+            <span id="quickHealthScore" style="color: #fff; font-weight: 800;">52.4 / 100</span>
+            <span style="font-size: 10.5px; opacity: 0.8;">(View Telemetry &rarr;)</span>
+        </div>
+    </div>
+
+    <!-- TAB 1: CROP DIAGNOSIS (2 Spacious Columns) -->
+    <div class="tab-view" id="tab-diagnosis">
+
+        <!-- COLUMN 1: VISUAL INGESTION -->
         <div class="panel">
             <div class="panel-title">
                 <h3>Visual Ingestion</h3>
@@ -722,93 +791,108 @@
             </div>
         </div>
 
-        <!-- COLUMN 3: ENVIRONMENTAL TELEMETRY & HEALTH INDEX -->
-        <div class="panel health-col">
+    </div>
+
+    <!-- TAB 2: FIELD TELEMETRY (2 Spacious Columns) -->
+    <div class="tab-view" id="tab-telemetry" style="display: none;">
+
+        <!-- COLUMN 1: CONSOLIDATED HEALTH INDEX -->
+        <div class="panel">
             <div class="panel-title">
-                <h3>Environmental Telemetry</h3>
-                <span>Real-Time Ingestion</span>
+                <h3>Overall Crop Health Status</h3>
+                <span>Joint 60/40 Multimodal Latent Fusion</span>
             </div>
 
-            <div class="telemetry-mode-switch">
-                <button class="mode-btn active" id="btnModeManual" onclick="toggleTelemetryMode('manual')">🎛️ Manual Sliders</button>
-                <button class="mode-btn" id="btnModeLive" onclick="toggleTelemetryMode('live')">📡 ESP32 Live Stream</button>
-            </div>
-
-            <div class="health-index-card">
+            <div class="health-index-card" style="padding: 32px 20px;">
                 <div class="score-sub">Consolidated Health Score</div>
-                <div class="score-big" id="healthScoreVal">52.4</div>
-                <div class="health-tier-label" id="healthTier">MODERATE STRESS DETECTED</div>
+                <div class="score-big" id="healthScoreVal" style="font-size: 64px;">52.4</div>
+                <div class="health-tier-label" id="healthTier" style="font-size: 14px; margin-top: 6px;">MODERATE STRESS DETECTED</div>
             </div>
 
-            <div class="slider-item">
-                <div class="slider-head">
-                    <span>Soil Moisture</span>
-                    <b id="valMoist">42%</b>
-                </div>
-                <input type="range" id="sliderMoist" min="10" max="95" value="42" oninput="updateTelemetry()">
-            </div>
-
-            <div class="slider-item">
-                <div class="slider-head">
-                    <span>Air Temperature</span>
-                    <b id="valTemp">32.0 °C</b>
-                </div>
-                <input type="range" id="sliderTemp" min="10" max="45" step="0.5" value="32.0" oninput="updateTelemetry()">
-            </div>
-
-            <div class="slider-item">
-                <div class="slider-head">
-                    <span>Relative Humidity</span>
-                    <b id="valHum">76%</b>
-                </div>
-                <input type="range" id="sliderHum" min="20" max="100" value="76" oninput="updateTelemetry()">
-            </div>
-
-            <div class="slider-item">
-                <div class="slider-head">
-                    <span>Soil Reaction (pH)</span>
-                    <b id="valPh">6.6</b>
-                </div>
-                <input type="range" id="sliderPh" min="4.5" max="8.5" step="0.1" value="6.6" oninput="updateTelemetry()">
-            </div>
-
-            <div style="margin-top: 14px; padding: 12px; background: rgba(15,23,42,0.4); border-radius: var(--radius-sm); border: 1px solid var(--border);">
-                <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 4px;">Active Abiotic Triggers</div>
-                <div style="font-size: 11px; color: var(--text-secondary); line-height: 1.4;" id="abioticList">
+            <div style="margin-top: 20px; padding: 16px; background: rgba(15,23,42,0.6); border-radius: var(--radius-sm); border: 1px solid var(--border);">
+                <div style="font-size: 11.5px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 8px;">Active Abiotic Triggers</div>
+                <div style="font-size: 12.5px; color: var(--text-secondary); line-height: 1.6;" id="abioticList">
                     &bull; Elevated temperature and morning moisture favor rust development.
                 </div>
             </div>
         </div>
 
-    </div>
+        <!-- COLUMN 2: SENSORS & CONTROLS -->
+        <div class="panel">
+            <div class="panel-title">
+                <h3>Environmental Telemetry</h3>
+                <span>ESP32 Hardware Ingestion</span>
+            </div>
 
-    <!-- STAGE 6: DATABASE & HISTORICAL SCAN LOG -->
-    <div class="panel" id="historySection" style="margin-top: 24px;">
-        <div class="panel-title">
-            <h3>Stored Diagnostics & Telemetry Log (Database Layer)</h3>
-            <div style="display: flex; gap: 6px;">
-                <button class="toggle-btn" onclick="exportLogCSV()">Export CSV</button>
-                <button class="toggle-btn" onclick="clearHistoryLog()">Clear</button>
+            <div class="telemetry-mode-switch" style="margin-bottom: 20px;">
+                <button class="mode-btn active" id="btnModeManual" onclick="toggleTelemetryMode('manual')">🎛️ Manual Sliders (Calibration)</button>
+                <button class="mode-btn" id="btnModeLive" onclick="toggleTelemetryMode('live')">📡 ESP32 Live Stream (115200 Baud)</button>
+            </div>
+
+            <div class="slider-item" style="margin-bottom: 20px;">
+                <div class="slider-head" style="font-size: 13px;">
+                    <span>💧 Soil Moisture</span>
+                    <b id="valMoist" style="font-size: 14px;">42%</b>
+                </div>
+                <input type="range" id="sliderMoist" min="10" max="95" value="42" oninput="updateTelemetry()">
+            </div>
+
+            <div class="slider-item" style="margin-bottom: 20px;">
+                <div class="slider-head" style="font-size: 13px;">
+                    <span>🌡️ Air Temperature</span>
+                    <b id="valTemp" style="font-size: 14px;">32.0 °C</b>
+                </div>
+                <input type="range" id="sliderTemp" min="10" max="45" step="0.5" value="32.0" oninput="updateTelemetry()">
+            </div>
+
+            <div class="slider-item" style="margin-bottom: 20px;">
+                <div class="slider-head" style="font-size: 13px;">
+                    <span>💨 Relative Humidity</span>
+                    <b id="valHum" style="font-size: 14px;">76%</b>
+                </div>
+                <input type="range" id="sliderHum" min="20" max="100" value="76" oninput="updateTelemetry()">
+            </div>
+
+            <div class="slider-item" style="margin-bottom: 20px;">
+                <div class="slider-head" style="font-size: 13px;">
+                    <span>🧪 Soil Reaction (pH)</span>
+                    <b id="valPh" style="font-size: 14px;">6.6</b>
+                </div>
+                <input type="range" id="sliderPh" min="4.5" max="8.5" step="0.1" value="6.6" oninput="updateTelemetry()">
             </div>
         </div>
-        <div style="overflow-x: auto;">
-            <table class="history-table">
-                <thead>
-                    <tr>
-                        <th>Timestamp</th>
-                        <th>Pathology Class</th>
-                        <th>Confidence</th>
-                        <th>Severity</th>
-                        <th>Health Score</th>
-                        <th>Telemetry (Moist / Temp / Hum / pH)</th>
-                    </tr>
-                </thead>
-                <tbody id="historyTableBody">
-                    <tr>
-                        <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 14px;">No diagnostic records stored yet. Click "Log to DB" to record active scan.</td>
-                    </tr>
-                </tbody>
-            </table>
+
+    </div>
+
+    <!-- TAB 3: STORED LOGS (Full Width Clean View) -->
+    <div class="tab-view-single" id="tab-history" style="display: none;">
+        <div class="panel">
+            <div class="panel-title">
+                <h3>Stored Diagnostics & Telemetry Log (Database Layer)</h3>
+                <div style="display: flex; gap: 6px;">
+                    <button class="toggle-btn" onclick="exportLogCSV()">Export CSV</button>
+                    <button class="toggle-btn" onclick="clearHistoryLog()">Clear</button>
+                </div>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Pathology Class</th>
+                            <th>Confidence</th>
+                            <th>Severity</th>
+                            <th>Health Score</th>
+                            <th>Telemetry (Moist / Temp / Hum / pH)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 14px;">No diagnostic records stored yet. Click "Log to DB" to record active scan.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -1350,6 +1434,28 @@ Alliance University | Design Project 1`;
         }
     }
 
+    function switchMainTab(tabId, btn) {
+        document.getElementById('tab-diagnosis').style.display = 'none';
+        document.getElementById('tab-telemetry').style.display = 'none';
+        document.getElementById('tab-history').style.display = 'none';
+
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+        const target = document.getElementById(tabId);
+        if (target) {
+            if (tabId === 'tab-history') {
+                target.style.display = 'block';
+            } else {
+                target.style.display = 'grid';
+            }
+        }
+        if (btn) btn.classList.add('active');
+
+        if (tabId === 'tab-diagnosis') {
+            setTimeout(renderCanvas, 40);
+        }
+    }
+
     function updateUI() {
         const data = activeProfile;
         const lang = currentLang;
@@ -1405,17 +1511,23 @@ Alliance University | Design Project 1`;
         const healthScore = Math.max(0, 100 - totalStress).toFixed(1);
 
         document.getElementById("healthScoreVal").innerText = healthScore;
+        const quickEl = document.getElementById("quickHealthScore");
+        if (quickEl) quickEl.innerText = healthScore + " / 100";
+
         const tierEl = document.getElementById("healthTier");
 
         if (healthScore >= 75) {
             tierEl.innerText = "OPTIMAL PHYSIOLOGY / LOW RISK";
             document.getElementById("healthScoreVal").style.color = "#10b981";
+            if (quickEl) quickEl.style.color = "#10b981";
         } else if (healthScore >= 45) {
             tierEl.innerText = "MODERATE MICROCLIMATE STRESS";
             document.getElementById("healthScoreVal").style.color = "#f59e0b";
+            if (quickEl) quickEl.style.color = "#f59e0b";
         } else {
             tierEl.innerText = "CRITICAL / IMMEDIATE INTERVENTION";
             document.getElementById("healthScoreVal").style.color = "#ef4444";
+            if (quickEl) quickEl.style.color = "#ef4444";
         }
 
         document.getElementById("abioticList").innerHTML = abioticFactors.map(f => `&bull; ${f}`).join("<br>");
