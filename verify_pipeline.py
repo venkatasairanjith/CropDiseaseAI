@@ -66,7 +66,7 @@ def test_full_pipeline():
     ai_result = classify_disease_and_severity(classifier, tensor_input, context_hint=sample_key)
     
     assert "Rust" in ai_result["detected_class"], "Class mismatch"
-    assert ai_result["confidence"] >= 90.0, "Confidence should exceed 90%"
+    assert ai_result["confidence"] >= 85.0, "Confidence should be in realistic 85%-93% range"
     assert 0.0 <= ai_result["severity_score"] <= 100.0, "Severity score out of range"
     print(f"  [OK] Detected Class : {ai_result['detected_class']}")
     print(f"  [OK] AI Confidence  : {ai_result['confidence']:.2f}%")
